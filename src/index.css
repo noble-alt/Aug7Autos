@@ -2,41 +2,69 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Abuja Best Cars Design System - Premium Car Dealership */
 
 @layer base {
   :root {
+    /* Core brand colors - Deep Navy, Silver, Electric Red */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 220 100% 8%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 220 100% 8%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 220 100% 8%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Deep Navy Primary */
+    --primary: 220 100% 8%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 220 60% 15%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Silver Secondary */
+    --secondary: 210 8% 75%;
+    --secondary-foreground: 220 100% 8%;
+    --silver: 210 8% 85%;
+    --silver-dark: 210 8% 65%;
 
-    --muted: 210 40% 96.1%;
+    /* Electric Red Accent */
+    --accent: 0 85% 55%;
+    --accent-foreground: 0 0% 100%;
+    --electric-red: 0 85% 55%;
+    --electric-red-dark: 0 85% 45%;
+
+    --muted: 210 8% 95%;
     --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 220 100% 8%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Premium Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(220 100% 8%) 0%, hsl(220 60% 15%) 50%, hsl(210 8% 25%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(210 8% 98%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(0 85% 55%) 0%, hsl(0 85% 45%) 100%);
+    --gradient-silver: linear-gradient(135deg, hsl(210 8% 85%) 0%, hsl(210 8% 75%) 100%);
+    --gradient-overlay: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);
+
+    /* Glass effects */
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+    /* Premium shadows */
+    --shadow-elegant: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+    --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.15);
+    --shadow-float: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+    /* Animations */
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
 
@@ -94,12 +122,141 @@ All colors MUST be HSL.
   }
 }
 
+}
+
 @layer base {
   * {
     @apply border-border;
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+  }
+}
+
+@layer components {
+  /* Glass navbar styles */
+  .glass-nav {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+  }
+
+  /* Premium button styles */
+  .btn-premium {
+    background: var(--gradient-accent);
+    box-shadow: var(--shadow-elegant);
+    transition: var(--transition-smooth);
+  }
+
+  .btn-premium:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-float);
+  }
+
+  /* Car card styles */
+  .car-card {
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-smooth);
+  }
+
+  .car-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-float);
+  }
+
+  /* Hero text animations */
+  .hero-text {
+    background: linear-gradient(135deg, hsl(var(--primary-foreground)) 0%, hsl(var(--silver)) 50%, hsl(var(--electric-red)) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* WhatsApp floating button */
+  .whatsapp-float {
+    background: #25D366;
+    box-shadow: var(--shadow-float);
+    animation: float 3s ease-in-out infinite;
+  }
+
+  /* Testimonial card styles */
+  .testimonial-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+}
+
+@layer utilities {
+  /* Custom animations */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInScale {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  .animate-slide-up {
+    animation: slideInUp 0.6s ease-out;
+  }
+
+  .animate-fade-scale {
+    animation: fadeInScale 0.5s ease-out;
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  /* Glass morphism utilities */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+  }
+
+  /* Gradient text utilities */
+  .text-gradient-primary {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-silver {
+    background: var(--gradient-silver);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }
