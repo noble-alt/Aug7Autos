@@ -33,7 +33,7 @@ const Navbar = () => {
               <Car className="h-6 w-6 text-white" />
             </div>
             <div className="text-xl font-bold text-primary">
-              Abuja <span className="text-electric-red">Best Cars</span>
+              <span className="text-electric-red">Aug7Autos</span>
             </div>
           </div>
 
