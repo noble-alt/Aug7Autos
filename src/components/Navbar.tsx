@@ -33,7 +33,7 @@ const Navbar = () => {
               <Car className="h-6 w-6 text-white" />
             </div>
             <div className="text-xl font-bold text-primary">
-              <span className="text-electric-red">AutoHub</span>
+              <span className="text-electric-red">Aug7Aautos</span>
             </div>
           </div>
 
@@ -91,7 +91,16 @@ const Navbar = () => {
                   {item.name}
                 </a>
               ))}
-              <div className="pt-2">
+              <div className="pt-2 space-y-2">
+                <Button 
+                  variant="ghost"
+                  size="sm"
+                  className="w-full text-primary hover:text-electric-red flex items-center justify-center gap-2"
+                  onClick={() => window.location.href = '/admin'}
+                >
+                  <Settings className="h-5 w-5" />
+                  Admin
+                </Button>
                 <Button 
                   className="w-full btn-premium text-white py-2 rounded-full font-semibold"
                   variant="default"
