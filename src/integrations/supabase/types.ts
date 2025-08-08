@@ -14,7 +14,165 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      admin_users: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          name: string
+          password_hash: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          name: string
+          password_hash: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          name?: string
+          password_hash?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      blogs: {
+        Row: {
+          author: string
+          content: string
+          created_at: string | null
+          excerpt: string | null
+          id: string
+          image_url: string | null
+          published: boolean | null
+          slug: string
+          tags: string[] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          author: string
+          content: string
+          created_at?: string | null
+          excerpt?: string | null
+          id?: string
+          image_url?: string | null
+          published?: boolean | null
+          slug: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          author?: string
+          content?: string
+          created_at?: string | null
+          excerpt?: string | null
+          id?: string
+          image_url?: string | null
+          published?: boolean | null
+          slug?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      cars: {
+        Row: {
+          brand: string
+          created_at: string | null
+          description: string | null
+          id: string
+          image_url: string | null
+          model: string
+          name: string
+          price: number
+          specifications: Json | null
+          status: string | null
+          updated_at: string | null
+          year: number
+        }
+        Insert: {
+          brand: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          model: string
+          name: string
+          price: number
+          specifications?: Json | null
+          status?: string | null
+          updated_at?: string | null
+          year: number
+        }
+        Update: {
+          brand?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          model?: string
+          name?: string
+          price?: number
+          specifications?: Json | null
+          status?: string | null
+          updated_at?: string | null
+          year?: number
+        }
+        Relationships: []
+      }
+      mobil_oils: {
+        Row: {
+          benefits: string[] | null
+          created_at: string | null
+          description: string | null
+          id: string
+          image_url: string | null
+          in_stock: boolean | null
+          name: string
+          price: number
+          type: string
+          updated_at: string | null
+          viscosity: string
+          volume: string
+        }
+        Insert: {
+          benefits?: string[] | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          in_stock?: boolean | null
+          name: string
+          price: number
+          type: string
+          updated_at?: string | null
+          viscosity: string
+          volume: string
+        }
+        Update: {
+          benefits?: string[] | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          in_stock?: boolean | null
+          name?: string
+          price?: number
+          type?: string
+          updated_at?: string | null
+          viscosity?: string
+          volume?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
