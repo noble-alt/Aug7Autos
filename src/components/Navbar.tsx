@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Car } from 'lucide-react';
+import { Menu, X, Car, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Navbar = () => {
@@ -33,7 +33,7 @@ const Navbar = () => {
               <Car className="h-6 w-6 text-white" />
             </div>
             <div className="text-xl font-bold text-primary">
-              <span className="text-electric-red">Aug7Autos</span>
+              <span className="text-electric-red">AutoHub</span>
             </div>
           </div>
 
@@ -48,6 +48,14 @@ const Navbar = () => {
                 {item.name}
               </a>
             ))}
+            <Button 
+              variant="ghost"
+              size="sm"
+              className="text-primary hover:text-electric-red"
+              onClick={() => window.location.href = '/admin'}
+            >
+              <Settings className="h-5 w-5" />
+            </Button>
             <Button 
               className="btn-premium text-white px-6 py-2 rounded-full font-semibold"
               variant="default"

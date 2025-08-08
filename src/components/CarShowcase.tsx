@@ -89,7 +89,6 @@ const CarShowcase = () => {
               <CardContent className="p-6">
                 <div className="mb-4">
                   <h3 className="text-2xl font-bold text-primary mb-2">{car.name}</h3>
-                  <p className="text-3xl font-bold text-electric-red">{car.price}</p>
                 </div>
 
                 {/* Car Stats */}
