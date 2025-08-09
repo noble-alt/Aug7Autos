@@ -175,7 +175,7 @@ const Admin = () => {
             <div className="mx-auto w-12 h-12 bg-gradient-to-r from-electric-red to-electric-red-dark rounded-full flex items-center justify-center mb-4">
               <Car className="h-6 w-6 text-white" />
             </div>
-            <CardTitle className="text-2xl">Aug7Aautos Admin</CardTitle>
+            <CardTitle className="text-2xl">Aug7Autos Admin</CardTitle>
             <CardDescription>Sign in to access the admin dashboard</CardDescription>
           </CardHeader>
           <CardContent>
@@ -218,7 +218,7 @@ const Admin = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
               <Car className="h-8 w-8 text-electric-red" />
-              <h1 className="text-xl font-bold">Aug7Aautos Admin</h1>
+              <h1 className="text-xl font-bold">Aug7Autos Admin</h1>
             </div>
             <Button variant="ghost" onClick={handleLogout} className="text-white hover:text-electric-red">
               <LogOut className="h-5 w-5 mr-2" />

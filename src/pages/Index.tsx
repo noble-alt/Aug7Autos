@@ -73,7 +73,7 @@ const Index = () => {
       <footer className="bg-primary text-white py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-white/80">
-            © 2025 Aug7Aautos. All rights reserved. | 
+            © 2025 Aug7Autos. All rights reserved. | 
             <span className="text-electric-red"> Drive Your Dreams Today</span>
           </p>
         </div>

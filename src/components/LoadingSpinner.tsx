@@ -17,7 +17,7 @@ const LoadingSpinner = () => {
 
         {/* Loading Text */}
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-white">Aug7Aautos</h2>
+          <h2 className="text-2xl font-bold text-white">Aug7Autos</h2>
           <p className="text-white/80">Loading your dream cars...</p>
         </div>
 
