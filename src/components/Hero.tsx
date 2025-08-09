@@ -30,13 +30,13 @@ const Hero = () => {
             <span className="hero-text">Dream Car Today</span>
             <br />
             <span className="text-white">Only at</span> 
-            <span className="text-electric-red"> Abuja Best Cars!</span>
+            <span className="text-electric-red"> Aug7Autos!</span>
           </h1>
 
           {/* Subtitle */}
           <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
             Discover premium vehicles with unbeatable financing options. 
-            Your perfect car awaits in Nigeria's most trusted dealership.
+            Your perfect car awaits at Aug7Autos - Ring Road, Ibadan.
           </p>
 
           {/* CTA Buttons */}
@@ -44,6 +44,12 @@ const Hero = () => {
             <Button 
               size="lg"
               className="btn-premium text-white px-8 py-4 text-lg rounded-full font-semibold min-w-[200px]"
+              onClick={() => {
+                const carsSection = document.getElementById('cars');
+                if (carsSection) {
+                  carsSection.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
             >
               Browse Cars
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -53,6 +59,12 @@ const Hero = () => {
               size="lg"
               variant="outline"
               className="glass border-white/30 text-white hover:bg-white/10 px-8 py-4 text-lg rounded-full font-semibold min-w-[200px]"
+              onClick={() => {
+                const phoneNumber = "2348023659244";
+                const message = "Hello! I'm interested in financing options for a car.";
+                const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+              }}
             >
               Get Financing
             </Button>

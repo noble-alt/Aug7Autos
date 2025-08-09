@@ -7,44 +7,71 @@ import carSUV from '@/assets/car-suv-red.jpg';
 import carSports from '@/assets/car-sports-white.jpg';
 
 const CarShowcase = () => {
-  const cars = [
-    {
-      id: 1,
-      name: "Luxury Sedan",
-      price: "₦15,500,000",
-      image: carSedan,
-      rating: 4.9,
-      fuel: "Hybrid",
-      seats: 5,
-      speed: "250 km/h",
-      year: 2024,
-      features: ["Leather Interior", "Sunroof", "Navigation"]
-    },
-    {
-      id: 2,
-      name: "Premium SUV",
-      price: "₦22,800,000",
-      image: carSUV,
-      rating: 4.8,
-      fuel: "Petrol",
-      seats: 7,
-      speed: "200 km/h",
-      year: 2024,
-      features: ["4WD", "Panoramic Roof", "Premium Sound"]
-    },
-    {
-      id: 3,
-      name: "Sports Coupe",
-      price: "₦35,200,000",
-      image: carSports,
-      rating: 5.0,
-      fuel: "Petrol",
-      seats: 2,
-      speed: "320 km/h",
-      year: 2024,
-      features: ["Racing Package", "Carbon Fiber", "Track Mode"]
-    }
-  ];
+  const [cars, setCars] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+
+  const handleContactWhatsApp = (carName: string, action: string) => {
+    const phoneNumber = "2348023659244";
+    const message = `Hello! I'm interested in ${action.toLowerCase()} the ${carName}. Can you provide more information?`;
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  React.useEffect(() => {
+    const fetchCars = async () => {
+      try {
+        const { data } = await fetch('/api/cars').then(res => res.json()).catch(() => ({ data: null }));
+        
+        // Fallback to hardcoded cars if no data from API
+        const fallbackCars = [
+          {
+            id: 1,
+            name: "Toyota RAV4",
+            condition: "Fairly Used",
+            image: carSedan,
+            rating: 4.9,
+            fuel: "Hybrid",
+            seats: 5,
+            speed: "250 km/h",
+            year: 2024,
+            features: ["Leather Interior", "Sunroof", "Navigation"]
+          },
+          {
+            id: 2,
+            name: "Honda CR-V",
+            condition: "New",
+            image: carSUV,
+            rating: 4.8,
+            fuel: "Petrol",
+            seats: 7,
+            speed: "200 km/h",
+            year: 2024,
+            features: ["4WD", "Panoramic Roof", "Premium Sound"]
+          },
+          {
+            id: 3,
+            name: "BMW X5",
+            condition: "For Hire",
+            image: carSports,
+            rating: 5.0,
+            fuel: "Petrol",
+            seats: 2,
+            speed: "320 km/h",
+            year: 2024,
+            features: ["Racing Package", "Carbon Fiber", "Track Mode"]
+          }
+        ];
+        
+        setCars(data || fallbackCars);
+      } catch (error) {
+        console.error('Error fetching cars:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCars();
+  }, []);
 
   return (
     <section id="cars" className="py-20 bg-gradient-to-b from-background to-muted">
@@ -63,7 +90,28 @@ const CarShowcase = () => {
 
         {/* Cars Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {cars.map((car, index) => (
+          {loading ? (
+            // Loading skeleton
+            [...Array(3)].map((_, index) => (
+              <Card key={index} className="car-card border-0 overflow-hidden">
+                <div className="w-full h-64 bg-muted animate-pulse"></div>
+                <CardContent className="p-6">
+                  <div className="h-6 bg-muted rounded mb-2 animate-pulse"></div>
+                  <div className="h-4 bg-muted rounded mb-4 animate-pulse"></div>
+                  <div className="grid grid-cols-3 gap-4 mb-6">
+                    {[...Array(3)].map((_, i) => (
+                      <div key={i} className="h-12 bg-muted rounded animate-pulse"></div>
+                    ))}
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="flex-1 h-10 bg-muted rounded animate-pulse"></div>
+                    <div className="w-24 h-10 bg-muted rounded animate-pulse"></div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            cars.map((car, index) => (
             <Card 
               key={car.id} 
               className="car-card border-0 overflow-hidden group"
@@ -89,6 +137,7 @@ const CarShowcase = () => {
               <CardContent className="p-6">
                 <div className="mb-4">
                   <h3 className="text-2xl font-bold text-primary mb-2">{car.name}</h3>
+                  <p className="text-lg font-semibold text-electric-red">{car.condition}</p>
                 </div>
 
                 {/* Car Stats */}
@@ -127,6 +176,7 @@ const CarShowcase = () => {
                   <Button 
                     className="flex-1 btn-premium text-white rounded-full"
                     size="sm"
+                    onClick={() => handleContactWhatsApp(car.name, "View Details")}
                   >
                     View Details
                   </Button>
@@ -134,13 +184,15 @@ const CarShowcase = () => {
                     variant="outline" 
                     size="sm"
                     className="px-4 rounded-full"
+                    onClick={() => handleContactWhatsApp(car.name, "Book Test Drive")}
                   >
                     Book Test Drive
                   </Button>
                 </div>
               </CardContent>
             </Card>
-          ))}
+            ))
+          )}
         </div>
 
         {/* View All Button */}
@@ -149,6 +201,7 @@ const CarShowcase = () => {
             size="lg"
             variant="outline"
             className="px-8 py-4 text-lg rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300"
+            onClick={() => handleContactWhatsApp("All Cars", "View All Cars")}
           >
             View All Cars
           </Button>

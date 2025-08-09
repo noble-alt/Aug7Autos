@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import CarShowcase from '@/components/CarShowcase';
+import MobilOilSection from '@/components/MobilOilSection';
 import WhyChooseUs from '@/components/WhyChooseUs';
-import Testimonials from '@/components/Testimonials';
+import ContactInfo from '@/components/ContactInfo';
 import Contact from '@/components/Contact';
 import WhatsAppFloat from '@/components/WhatsAppFloat';
+import BackToTop from '@/components/BackToTop';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 const Index = () => {
@@ -52,15 +54,23 @@ const Index = () => {
       {/* Main Content */}
       <main>
         <Hero />
+        
         <div className="animate-on-scroll">
           <CarShowcase />
         </div>
+        
+        <div className="animate-on-scroll">
+          <MobilOilSection />
+        </div>
+        
         <div className="animate-on-scroll">
           <WhyChooseUs />
         </div>
+        
         <div className="animate-on-scroll">
-          <Testimonials />
+          <ContactInfo />
         </div>
+        
         <div className="animate-on-scroll">
           <Contact />
         </div>
@@ -68,6 +78,7 @@ const Index = () => {
 
       {/* Floating Elements */}
       <WhatsAppFloat />
+      <BackToTop />
 
       {/* Footer */}
       <footer className="bg-primary text-white py-8">
