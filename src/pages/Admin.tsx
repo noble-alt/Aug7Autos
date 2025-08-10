@@ -53,7 +53,7 @@ const Admin = () => {
   const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   
   // Data states
@@ -72,11 +72,12 @@ const Admin = () => {
   }, []);
 
   const checkAuth = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    setIsAuthenticated(!!session);
+    // Check if admin is already authenticated (using localStorage for session)
+    const isLoggedIn = localStorage.getItem('aug7_admin_authenticated') === 'true';
+    setIsAuthenticated(isLoggedIn);
     setLoading(false);
     
-    if (session) {
+    if (isLoggedIn) {
       fetchData();
     }
   };
@@ -104,24 +105,21 @@ const Admin = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      if (error) {
-        toast({
-          variant: "destructive",
-          title: "Login Failed",
-          description: error.message
-        });
-      } else {
+      // Simple credential check for Aug7Autos admin
+      if (username === 'Aug7-autos' && password === 'Aug7autos') {
+        localStorage.setItem('aug7_admin_authenticated', 'true');
         setIsAuthenticated(true);
         toast({
           title: "Success",
           description: "Logged in successfully"
         });
         fetchData();
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Login Failed",
+          description: "Invalid credentials"
+        });
       }
     } catch (error) {
       toast({
@@ -133,7 +131,7 @@ const Admin = () => {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    localStorage.removeItem('aug7_admin_authenticated');
     setIsAuthenticated(false);
     navigate('/');
   };
@@ -181,12 +179,12 @@ const Admin = () => {
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="username">Username</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
                 />
               </div>
