@@ -39,9 +39,12 @@ const Contact = () => {
                   <div>
                     <h3 className="text-xl font-bold text-primary mb-2">Visit Our Showroom</h3>
                     <p className="text-muted-foreground">
-                      123 Independence Avenue<br />
-                      Central Business District<br />
-                      Abuja, FCT, Nigeria
+                      Aug7Autos<br />
+                      Opposite Polaris/GTB Banks<br />
+                      Beside Liberty Fence<br />
+                      Lister Bus-Stop<br />
+                      Ring Road, Ibadan<br />
+                      Oyo State, Nigeria
                     </p>
                   </div>
                 </div>
@@ -57,8 +60,10 @@ const Contact = () => {
                   <div>
                     <h3 className="text-xl font-bold text-primary mb-2">Call Us</h3>
                     <p className="text-muted-foreground">
-                      +234 812 345 6789<br />
-                      +234 901 234 5678
+                      <span className="font-semibold text-electric-red">Hotline / WhatsApp:</span><br />
+                      <a href="tel:+2348023659244" className="hover:text-electric-red transition-colors">08023659244</a><br />
+                      <span className="font-semibold text-electric-red">Other Line:</span><br />
+                      <a href="tel:+2348057710330" className="hover:text-electric-red transition-colors">08057710330</a>
                     </p>
                   </div>
                 </div>
@@ -74,8 +79,9 @@ const Contact = () => {
                   <div>
                     <h3 className="text-xl font-bold text-primary mb-2">Email Us</h3>
                     <p className="text-muted-foreground">
-                      info@abujabestcars.com<br />
-                      sales@abujabestcars.com
+                      <a href="mailto:aug7inc@hotmail.com" className="hover:text-electric-red transition-colors">
+                        aug7inc@hotmail.com
+                      </a>
                     </p>
                   </div>
                 </div>
