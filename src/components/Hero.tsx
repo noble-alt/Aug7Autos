@@ -45,10 +45,7 @@ const Hero = () => {
               size="lg"
               className="btn-premium text-white px-8 py-4 text-lg rounded-full font-semibold min-w-[200px]"
               onClick={() => {
-                const carsSection = document.getElementById('cars');
-                if (carsSection) {
-                  carsSection.scrollIntoView({ behavior: 'smooth' });
-                }
+                window.location.href = '/cars';
               }}
             >
               Browse Cars

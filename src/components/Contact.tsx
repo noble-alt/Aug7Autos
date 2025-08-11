@@ -194,23 +194,6 @@ const Contact = () => {
           </Card>
         </div>
 
-        {/* Map Section */}
-        <div className="mt-16">
-          <Card className="car-card border-0 overflow-hidden">
-            <CardContent className="p-0">
-              <div className="h-96 bg-muted flex items-center justify-center">
-                <div className="text-center">
-                  <MapPin className="h-12 w-12 text-electric-red mx-auto mb-4" />
-                  <h3 className="text-xl font-bold text-primary mb-2">Find Us Here</h3>
-                  <p className="text-muted-foreground">
-                    Interactive map would be embedded here<br />
-                    123 Independence Avenue, CBD, Abuja
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
       </div>
     </section>
   );

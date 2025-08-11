@@ -15,15 +15,15 @@ const Navbar = () => {
   }, []);
 
   const navItems = [
-    { name: 'Home', href: '#home' },
-    { name: 'Cars', href: '#cars' },
+    { name: 'Home', href: '/' },
+    { name: 'Cars', href: '/cars' },
     { name: 'About Us', href: '#about' },
     { name: 'Contact', href: '#contact' },
   ];
 
   return (
     <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${
-      isScrolled ? 'glass-nav' : 'bg-transparent'
+      isScrolled ? 'glass-nav' : 'bg-white/95 backdrop-blur-lg'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -40,13 +40,27 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="text-primary hover:text-electric-red transition-colors duration-300 font-medium"
-              >
-                {item.name}
-              </a>
+              item.href.startsWith('#') ? (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className="text-primary hover:text-electric-red transition-colors duration-300 font-medium"
+                >
+                  {item.name}
+                </a>
+              ) : (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className="text-primary hover:text-electric-red transition-colors duration-300 font-medium"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href = item.href;
+                  }}
+                >
+                  {item.name}
+                </a>
+              )
             ))}
             <Button 
               variant="ghost"
@@ -82,14 +96,29 @@ const Navbar = () => {
           <div className="md:hidden bg-background/95 backdrop-blur-lg border-t border-border/20">
             <div className="px-2 pt-2 pb-3 space-y-1">
               {navItems.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="block px-3 py-2 text-primary hover:text-electric-red transition-colors duration-300 font-medium"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.name}
-                </a>
+                item.href.startsWith('#') ? (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    className="block px-3 py-2 text-primary hover:text-electric-red transition-colors duration-300 font-medium"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item.name}
+                  </a>
+                ) : (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    className="block px-3 py-2 text-primary hover:text-electric-red transition-colors duration-300 font-medium"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsOpen(false);
+                      window.location.href = item.href;
+                    }}
+                  >
+                    {item.name}
+                  </a>
+                )
               ))}
               <div className="pt-2 space-y-2">
                 <Button 
