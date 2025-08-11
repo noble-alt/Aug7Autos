@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Car, Wrench, FileText, Users, LogOut, Plus, Edit, Trash2 } from 'lucide-react';
+import { ImageUpload } from '@/components/ImageUpload';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -22,6 +23,7 @@ interface Car {
   status: string;
   image_url?: string;
   specifications?: any;
+  price?: number;
 }
 
 interface MobilOil {
@@ -537,17 +539,19 @@ const CarDialog = ({ car, onClose }: { car?: Car; onClose: () => void }) => {
               <SelectContent>
                 <SelectItem value="available">Available</SelectItem>
                 <SelectItem value="sold">Sold</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="for hire">For Hire</SelectItem>
+                <SelectItem value="new">New</SelectItem>
+                <SelectItem value="fairly used">Fairly Used</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="image_url">Image URL</Label>
-          <Input
-            id="image_url"
-            value={formData.image_url}
-            onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+          <Label>Car Image</Label>
+          <ImageUpload
+            bucket="car-images"
+            currentImage={formData.image_url}
+            onImageUploaded={(url) => setFormData({ ...formData, image_url: url })}
           />
         </div>
         <div className="space-y-2">
@@ -665,11 +669,11 @@ const OilDialog = ({ oil, onClose }: { oil?: MobilOil; onClose: () => void }) =>
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="image_url">Image URL</Label>
-          <Input
-            id="image_url"
-            value={formData.image_url}
-            onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+          <Label>Oil Image</Label>
+          <ImageUpload
+            bucket="oil-images"
+            currentImage={formData.image_url}
+            onImageUploaded={(url) => setFormData({ ...formData, image_url: url })}
           />
         </div>
         <div className="space-y-2">
@@ -778,11 +782,11 @@ const BlogDialog = ({ blog, onClose }: { blog?: Blog; onClose: () => void }) => 
           </div>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="image_url">Image URL</Label>
-          <Input
-            id="image_url"
-            value={formData.image_url}
-            onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+          <Label>Blog Image</Label>
+          <ImageUpload
+            bucket="blog-images"
+            currentImage={formData.image_url}
+            onImageUploaded={(url) => setFormData({ ...formData, image_url: url })}
           />
         </div>
         <div className="space-y-2">

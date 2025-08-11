@@ -195,13 +195,45 @@ const CarShowcase = () => {
           )}
         </div>
 
+        {/* Filter Buttons */}
+        <div className="flex flex-wrap justify-center gap-4 mb-12">
+          <Button
+            variant="default"
+            className="rounded-full"
+            onClick={() => window.location.href = '/cars'}
+          >
+            All Cars
+          </Button>
+          <Button
+            variant="outline"
+            className="rounded-full"
+            onClick={() => window.location.href = '/cars?filter=for-hire'}
+          >
+            For Hire
+          </Button>
+          <Button
+            variant="outline"
+            className="rounded-full"
+            onClick={() => window.location.href = '/cars?filter=new'}
+          >
+            New
+          </Button>
+          <Button
+            variant="outline"
+            className="rounded-full"
+            onClick={() => window.location.href = '/cars?filter=fairly-used'}
+          >
+            Fairly Used
+          </Button>
+        </div>
+
         {/* View All Button */}
         <div className="text-center mt-12">
           <Button 
             size="lg"
             variant="outline"
             className="px-8 py-4 text-lg rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300"
-            onClick={() => handleContactWhatsApp("All Cars", "View All Cars")}
+            onClick={() => window.location.href = '/cars'}
           >
             View All Cars
           </Button>

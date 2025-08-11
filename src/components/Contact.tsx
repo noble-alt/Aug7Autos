@@ -99,7 +99,7 @@ const Contact = () => {
                     <p className="text-muted-foreground">
                       Monday - Friday: 8:00 AM - 6:00 PM<br />
                       Saturday: 9:00 AM - 4:00 PM<br />
-                      Sunday: Closed
+                      Sunday: 1:00 PM - 5:00 PM (on appointments)
                     </p>
                   </div>
                 </div>
