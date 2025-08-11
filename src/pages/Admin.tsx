@@ -34,6 +34,7 @@ interface MobilOil {
   image_url?: string;
   benefits?: string[];
   in_stock: boolean;
+  category: string;
 }
 
 interface Blog {
@@ -576,6 +577,7 @@ const OilDialog = ({ oil, onClose }: { oil?: MobilOil; onClose: () => void }) =>
     description: oil?.description || '',
     image_url: oil?.image_url || '',
     in_stock: oil?.in_stock ?? true,
+    category: oil?.category || 'engine oil',
     price: 0 // Default price since it's required but not shown
   });
 
@@ -619,6 +621,19 @@ const OilDialog = ({ oil, onClose }: { oil?: MobilOil; onClose: () => void }) =>
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             required
           />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="category">Category</Label>
+          <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="engine oil">Engine Oil</SelectItem>
+              <SelectItem value="brake oil">Brake Oil</SelectItem>
+              <SelectItem value="coolant">Coolant</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">

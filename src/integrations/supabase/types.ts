@@ -131,6 +131,7 @@ export type Database = {
       mobil_oils: {
         Row: {
           benefits: string[] | null
+          category: string
           created_at: string | null
           description: string | null
           id: string
@@ -145,6 +146,7 @@ export type Database = {
         }
         Insert: {
           benefits?: string[] | null
+          category?: string
           created_at?: string | null
           description?: string | null
           id?: string
@@ -159,6 +161,7 @@ export type Database = {
         }
         Update: {
           benefits?: string[] | null
+          category?: string
           created_at?: string | null
           description?: string | null
           id?: string
