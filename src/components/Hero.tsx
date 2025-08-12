@@ -51,20 +51,6 @@ const Hero = () => {
               Browse Cars
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
-            
-            <Button 
-              size="lg"
-              variant="outline"
-              className="glass border-white/30 text-white hover:bg-white/10 px-8 py-4 text-lg rounded-full font-semibold min-w-[200px]"
-              onClick={() => {
-                const phoneNumber = "2348023659244";
-                const message = "Hello! I'm interested in financing options for a car.";
-                const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-                window.open(whatsappUrl, '_blank');
-              }}
-            >
-              Get Financing
-            </Button>
           </div>
 
           {/* Stats */}

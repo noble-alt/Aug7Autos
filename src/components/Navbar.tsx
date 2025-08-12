@@ -21,10 +21,21 @@ const Navbar = () => {
     { name: 'Contact', href: '#contact' },
   ];
 
+  const handleNavigation = (href: string) => {
+    if (href.startsWith('#')) {
+      // For anchor links, scroll to the element
+      const element = document.querySelector(href);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      // For page navigation
+      window.location.href = href;
+    }
+  };
+
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${
-      isScrolled ? 'glass-nav' : 'bg-white/95 backdrop-blur-lg'
-    }`}>
+    <nav className="fixed top-0 w-full z-50 transition-all duration-500 bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -40,27 +51,13 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
-              item.href.startsWith('#') ? (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="text-primary hover:text-electric-red transition-colors duration-300 font-medium"
-                >
-                  {item.name}
-                </a>
-              ) : (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="text-primary hover:text-electric-red transition-colors duration-300 font-medium"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href = item.href;
-                  }}
-                >
-                  {item.name}
-                </a>
-              )
+              <button
+                key={item.name}
+                onClick={() => handleNavigation(item.href)}
+                className="text-primary hover:text-electric-red transition-colors duration-300 font-medium"
+              >
+                {item.name}
+              </button>
             ))}
             <Button 
               variant="ghost"
@@ -69,12 +66,6 @@ const Navbar = () => {
               onClick={() => window.location.href = '/admin'}
             >
               <Settings className="h-5 w-5" />
-            </Button>
-            <Button 
-              className="btn-premium text-white px-6 py-2 rounded-full font-semibold"
-              variant="default"
-            >
-              Get Quote
             </Button>
           </div>
 
@@ -93,34 +84,21 @@ const Navbar = () => {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden bg-background/95 backdrop-blur-lg border-t border-border/20">
+          <div className="md:hidden bg-white border-t border-gray-200">
             <div className="px-2 pt-2 pb-3 space-y-1">
               {navItems.map((item) => (
-                item.href.startsWith('#') ? (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className="block px-3 py-2 text-primary hover:text-electric-red transition-colors duration-300 font-medium"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {item.name}
-                  </a>
-                ) : (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className="block px-3 py-2 text-primary hover:text-electric-red transition-colors duration-300 font-medium"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setIsOpen(false);
-                      window.location.href = item.href;
-                    }}
-                  >
-                    {item.name}
-                  </a>
-                )
+                <button
+                  key={item.name}
+                  onClick={() => {
+                    setIsOpen(false);
+                    handleNavigation(item.href);
+                  }}
+                  className="block w-full text-left px-3 py-2 text-primary hover:text-electric-red transition-colors duration-300 font-medium"
+                >
+                  {item.name}
+                </button>
               ))}
-              <div className="pt-2 space-y-2">
+              <div className="pt-2">
                 <Button 
                   variant="ghost"
                   size="sm"
@@ -129,12 +107,6 @@ const Navbar = () => {
                 >
                   <Settings className="h-5 w-5" />
                   Admin
-                </Button>
-                <Button 
-                  className="w-full btn-premium text-white py-2 rounded-full font-semibold"
-                  variant="default"
-                >
-                  Get Quote
                 </Button>
               </div>
             </div>

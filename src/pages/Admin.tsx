@@ -37,6 +37,7 @@ interface MobilOil {
   benefits?: string[];
   in_stock: boolean;
   category: string;
+  price?: number;
 }
 
 interface Blog {
@@ -59,6 +60,9 @@ const Admin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   
+  // Auto logout timer
+  const [lastActivity, setLastActivity] = useState(Date.now());
+  
   // Data states
   const [cars, setCars] = useState<Car[]>([]);
   const [mobilOils, setMobilOils] = useState<MobilOil[]>([]);
@@ -73,6 +77,41 @@ const Admin = () => {
   useEffect(() => {
     checkAuth();
   }, []);
+
+  // Auto logout effect
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const handleActivity = () => {
+      setLastActivity(Date.now());
+    };
+
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+    events.forEach(event => {
+      document.addEventListener(event, handleActivity, true);
+    });
+
+    const interval = setInterval(() => {
+      const now = Date.now();
+      const timeSinceLastActivity = now - lastActivity;
+      const sevenMinutes = 7 * 60 * 1000; // 7 minutes in milliseconds
+
+      if (timeSinceLastActivity >= sevenMinutes) {
+        handleLogout();
+        toast({
+          title: "Session Expired",
+          description: "You have been logged out due to inactivity."
+        });
+      }
+    }, 60000); // Check every minute
+
+    return () => {
+      events.forEach(event => {
+        document.removeEventListener(event, handleActivity, true);
+      });
+      clearInterval(interval);
+    };
+  }, [isAuthenticated, lastActivity]);
 
   const checkAuth = async () => {
     // Check if admin is already authenticated (using localStorage for session)
@@ -296,13 +335,12 @@ const Admin = () => {
                           </Button>
                         </div>
                       </CardTitle>
-                      <CardDescription>{car.brand} {car.model} ({car.year})</CardDescription>
+                      <CardDescription className="capitalize">{car.status?.replace('-', ' ')}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       {car.image_url && (
                         <img src={car.image_url} alt={car.name} className="w-full h-32 object-cover rounded mb-3" />
                       )}
-                      <p className="text-sm text-muted-foreground mb-2">{car.description}</p>
                       <p className="text-sm font-medium">Status: {car.status}</p>
                     </CardContent>
                   </Card>
@@ -311,7 +349,7 @@ const Admin = () => {
             </div>
           </TabsContent>
 
-          {/* Similar structure for oils and blogs tabs */}
+          {/* Oils Tab */}
           <TabsContent value="oils">
             <div className="space-y-6">
               <div className="flex justify-between items-center">
@@ -360,15 +398,13 @@ const Admin = () => {
                           </Button>
                         </div>
                       </CardTitle>
-                      <CardDescription>{oil.type} - {oil.viscosity}</CardDescription>
+                      <CardDescription className="capitalize">{oil.category}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       {oil.image_url && (
                         <img src={oil.image_url} alt={oil.name} className="w-full h-32 object-cover rounded mb-3" />
                       )}
-                      <p className="text-sm text-muted-foreground mb-2">{oil.description}</p>
-                      <p className="text-sm font-medium">Volume: {oil.volume}</p>
-                      <p className="text-sm font-medium">In Stock: {oil.in_stock ? 'Yes' : 'No'}</p>
+                      <p className="text-sm font-medium">Category: {oil.category}</p>
                     </CardContent>
                   </Card>
                 ))}
@@ -449,13 +485,13 @@ const CarDialog = ({ car, onClose }: { car?: Car; onClose: () => void }) => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: car?.name || '',
-    brand: car?.brand || '',
-    model: car?.model || '',
-    year: car?.year || new Date().getFullYear(),
-    description: car?.description || '',
-    status: car?.status || 'available',
+    brand: car?.brand || 'Toyota', // Default brand
+    model: car?.model || 'Camry', // Default model  
+    year: car?.year || new Date().getFullYear(), // Default year
+    description: car?.description || '', // Remove description field
+    status: car?.status || 'brand-new',
     image_url: car?.image_url || '',
-    price: 0 // Default price since it's required but not shown
+    price: car?.price || 0 // Default price since it's required but not shown
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -477,94 +513,59 @@ const CarDialog = ({ car, onClose }: { car?: Car; onClose: () => void }) => {
       }
       onClose();
     } catch (error) {
+      console.error('Error saving car:', error);
       toast({ variant: "destructive", title: "Error", description: "Failed to save car" });
     }
   };
 
   return (
-    <DialogContent className="max-w-md">
+    <DialogContent>
       <DialogHeader>
         <DialogTitle>{car ? 'Edit Car' : 'Add New Car'}</DialogTitle>
         <DialogDescription>
-          {car ? 'Update car information' : 'Add a new car to the inventory'}
+          {car ? 'Update car information' : 'Add a new car to your inventory'}
         </DialogDescription>
       </DialogHeader>
+      
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="name">Name</Label>
+          <Label htmlFor="name">Car Name</Label>
           <Input
             id="name"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             required
+            placeholder="e.g., Toyota Camry 2024"
           />
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="brand">Brand</Label>
-            <Input
-              id="brand"
-              value={formData.brand}
-              onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="model">Model</Label>
-            <Input
-              id="model"
-              value={formData.model}
-              onChange={(e) => setFormData({ ...formData, model: e.target.value })}
-              required
-            />
-          </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="status">Condition</Label>
+          <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select condition" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="brand-new">Brand New</SelectItem>
+              <SelectItem value="fairly-used">Fairly Used</SelectItem>
+              <SelectItem value="for-hire">For Hire</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="year">Year</Label>
-            <Input
-              id="year"
-              type="number"
-              value={formData.year}
-              onChange={(e) => setFormData({ ...formData, year: parseInt(e.target.value) })}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="status">Status</Label>
-            <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="available">Available</SelectItem>
-                <SelectItem value="sold">Sold</SelectItem>
-                <SelectItem value="for hire">For Hire</SelectItem>
-                <SelectItem value="new">New</SelectItem>
-                <SelectItem value="fairly used">Fairly Used</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+        
         <div className="space-y-2">
           <Label>Car Image</Label>
-          <ImageUpload
+          <ImageUpload 
             bucket="car-images"
-            currentImage={formData.image_url}
             onImageUploaded={(url) => setFormData({ ...formData, image_url: url })}
+            currentImage={formData.image_url}
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="description">Description</Label>
-          <Textarea
-            id="description"
-            value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            rows={3}
-          />
-        </div>
+        
         <DialogFooter>
-          <Button type="submit">{car ? 'Update' : 'Create'}</Button>
+          <Button type="submit">
+            {car ? 'Update Car' : 'Add Car'}
+          </Button>
         </DialogFooter>
       </form>
     </DialogContent>
@@ -575,14 +576,15 @@ const OilDialog = ({ oil, onClose }: { oil?: MobilOil; onClose: () => void }) =>
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: oil?.name || '',
-    type: oil?.type || '',
-    viscosity: oil?.viscosity || '',
-    volume: oil?.volume || '',
-    description: oil?.description || '',
+    type: oil?.type || 'Full Synthetic', // Default type
+    viscosity: oil?.viscosity || '5W-30', // Default viscosity
+    volume: oil?.volume || '1L', // Default volume
+    description: oil?.description || '', // Remove description field
     image_url: oil?.image_url || '',
-    in_stock: oil?.in_stock ?? true,
+    benefits: oil?.benefits || [], // Remove benefits field
+    in_stock: oil?.in_stock !== undefined ? oil.in_stock : true, // Remove in_stock field
     category: oil?.category || 'engine oil',
-    price: 0 // Default price since it's required but not shown
+    price: oil?.price || 0 // Default price since it's required but not shown
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -604,99 +606,59 @@ const OilDialog = ({ oil, onClose }: { oil?: MobilOil; onClose: () => void }) =>
       }
       onClose();
     } catch (error) {
+      console.error('Error saving oil:', error);
       toast({ variant: "destructive", title: "Error", description: "Failed to save oil" });
     }
   };
 
   return (
-    <DialogContent className="max-w-md">
+    <DialogContent>
       <DialogHeader>
         <DialogTitle>{oil ? 'Edit Oil' : 'Add New Oil'}</DialogTitle>
         <DialogDescription>
-          {oil ? 'Update oil information' : 'Add a new oil to the inventory'}
+          {oil ? 'Update oil information' : 'Add a new oil to your inventory'}
         </DialogDescription>
       </DialogHeader>
+      
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="name">Name</Label>
+          <Label htmlFor="name">Product Name</Label>
           <Input
             id="name"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             required
+            placeholder="e.g., Mobil 1 Full Synthetic"
           />
         </div>
+        
         <div className="space-y-2">
           <Label htmlFor="category">Category</Label>
           <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
             <SelectTrigger>
-              <SelectValue />
+              <SelectValue placeholder="Select category" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="engine oil">Engine Oil</SelectItem>
-              <SelectItem value="brake oil">Brake Oil</SelectItem>
+              <SelectItem value="brake fluid">Brake Fluid</SelectItem>
               <SelectItem value="coolant">Coolant</SelectItem>
             </SelectContent>
           </Select>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="type">Type</Label>
-            <Input
-              id="type"
-              value={formData.type}
-              onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="viscosity">Viscosity</Label>
-            <Input
-              id="viscosity"
-              value={formData.viscosity}
-              onChange={(e) => setFormData({ ...formData, viscosity: e.target.value })}
-              required
-            />
-          </div>
-        </div>
+        
         <div className="space-y-2">
-          <Label htmlFor="volume">Volume</Label>
-          <Input
-            id="volume"
-            value={formData.volume}
-            onChange={(e) => setFormData({ ...formData, volume: e.target.value })}
-            required
-          />
-        </div>
-        <div className="space-y-2">
-          <Label>Oil Image</Label>
-          <ImageUpload
+          <Label>Product Image</Label>
+          <ImageUpload 
             bucket="oil-images"
-            currentImage={formData.image_url}
             onImageUploaded={(url) => setFormData({ ...formData, image_url: url })}
+            currentImage={formData.image_url}
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="description">Description</Label>
-          <Textarea
-            id="description"
-            value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            rows={3}
-          />
-        </div>
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="in_stock"
-            checked={formData.in_stock}
-            onChange={(e) => setFormData({ ...formData, in_stock: e.target.checked })}
-            className="rounded"
-          />
-          <Label htmlFor="in_stock">In Stock</Label>
-        </div>
+        
         <DialogFooter>
-          <Button type="submit">{oil ? 'Update' : 'Create'}</Button>
+          <Button type="submit">
+            {oil ? 'Update Oil' : 'Add Oil'}
+          </Button>
         </DialogFooter>
       </form>
     </DialogContent>

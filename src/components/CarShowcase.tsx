@@ -1,10 +1,8 @@
 import React from 'react';
-import { Star, Fuel, Users, Gauge } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import carSedan from '@/assets/car-sedan-luxury.jpg';
-import carSUV from '@/assets/car-suv-red.jpg';
-import carSports from '@/assets/car-sports-white.jpg';
+import { supabase } from '@/integrations/supabase/client';
 
 const CarShowcase = () => {
   const [cars, setCars] = React.useState([]);
@@ -20,49 +18,14 @@ const CarShowcase = () => {
   React.useEffect(() => {
     const fetchCars = async () => {
       try {
-        const { data } = await fetch('/api/cars').then(res => res.json()).catch(() => ({ data: null }));
+        const { data, error } = await supabase
+          .from('cars')
+          .select('*')
+          .limit(4)
+          .order('created_at', { ascending: false });
         
-        // Fallback to hardcoded cars if no data from API
-        const fallbackCars = [
-          {
-            id: 1,
-            name: "Toyota RAV4",
-            condition: "Fairly Used",
-            image: carSedan,
-            rating: 4.9,
-            fuel: "Hybrid",
-            seats: 5,
-            speed: "250 km/h",
-            year: 2024,
-            features: ["Leather Interior", "Sunroof", "Navigation"]
-          },
-          {
-            id: 2,
-            name: "Honda CR-V",
-            condition: "New",
-            image: carSUV,
-            rating: 4.8,
-            fuel: "Petrol",
-            seats: 7,
-            speed: "200 km/h",
-            year: 2024,
-            features: ["4WD", "Panoramic Roof", "Premium Sound"]
-          },
-          {
-            id: 3,
-            name: "BMW X5",
-            condition: "For Hire",
-            image: carSports,
-            rating: 5.0,
-            fuel: "Petrol",
-            seats: 2,
-            speed: "320 km/h",
-            year: 2024,
-            features: ["Racing Package", "Carbon Fiber", "Track Mode"]
-          }
-        ];
-        
-        setCars(data || fallbackCars);
+        if (error) throw error;
+        setCars(data || []);
       } catch (error) {
         console.error('Error fetching cars:', error);
       } finally {
@@ -119,56 +82,20 @@ const CarShowcase = () => {
             >
               <div className="relative overflow-hidden">
                 <img 
-                  src={car.image} 
+                  src={car.image_url || '/placeholder.svg'} 
                   alt={car.name}
                   className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
                 />
-                <div className="absolute top-4 left-4">
-                  <span className="bg-electric-red text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    {car.year}
-                  </span>
-                </div>
                 <div className="absolute top-4 right-4 flex items-center bg-black/50 backdrop-blur-sm rounded-full px-2 py-1">
                   <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
-                  <span className="text-white text-sm font-medium">{car.rating}</span>
+                  <span className="text-white text-sm font-medium">5.0</span>
                 </div>
               </div>
 
               <CardContent className="p-6">
                 <div className="mb-4">
                   <h3 className="text-2xl font-bold text-primary mb-2">{car.name}</h3>
-                  <p className="text-lg font-semibold text-electric-red">{car.condition}</p>
-                </div>
-
-                {/* Car Stats */}
-                <div className="grid grid-cols-3 gap-4 mb-6">
-                  <div className="text-center">
-                    <Fuel className="h-5 w-5 text-muted-foreground mx-auto mb-1" />
-                    <p className="text-sm text-muted-foreground">{car.fuel}</p>
-                  </div>
-                  <div className="text-center">
-                    <Users className="h-5 w-5 text-muted-foreground mx-auto mb-1" />
-                    <p className="text-sm text-muted-foreground">{car.seats} Seats</p>
-                  </div>
-                  <div className="text-center">
-                    <Gauge className="h-5 w-5 text-muted-foreground mx-auto mb-1" />
-                    <p className="text-sm text-muted-foreground">{car.speed}</p>
-                  </div>
-                </div>
-
-                {/* Features */}
-                <div className="mb-6">
-                  <h4 className="font-semibold text-primary mb-2">Key Features:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {car.features.map((feature, idx) => (
-                      <span 
-                        key={idx}
-                        className="bg-muted text-muted-foreground px-2 py-1 rounded-md text-xs"
-                      >
-                        {feature}
-                      </span>
-                    ))}
-                  </div>
+                  <p className="text-lg font-semibold text-electric-red capitalize">{car.status?.replace('-', ' ')}</p>
                 </div>
 
                 {/* Action Buttons */}
@@ -179,14 +106,6 @@ const CarShowcase = () => {
                     onClick={() => handleContactWhatsApp(car.name, "View Details")}
                   >
                     View Details
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className="px-4 rounded-full"
-                    onClick={() => handleContactWhatsApp(car.name, "Book Test Drive")}
-                  >
-                    Book Test Drive
                   </Button>
                 </div>
               </CardContent>
