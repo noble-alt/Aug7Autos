@@ -2,36 +2,19 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-// Enhanced debugging
-console.log("Attempting to connect to Supabase with URL:", SUPABASE_URL);
-if (!SUPABASE_PUBLISHABLE_KEY) {
-  console.log("Supabase Anon Key is MISSING.");
-}
-
-if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
-  throw new Error("Missing Supabase URL or anon key. Please check Vercel environment variables.");
-}
-
-let supabase;
-
-try {
-  supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-    auth: {
-      storage: localStorage,
-      persistSession: true,
-      autoRefreshToken: true,
-    }
-  });
-} catch (error) {
-  console.error("Error creating Supabase client:", error);
-  throw new Error(`Failed to create Supabase client. Please ensure the VITE_SUPABASE_URL is a valid and complete URL (e.g., starts with https://). The provided URL was: "${SUPABASE_URL}"`);
-}
-
+// WARNING: For simplified deployment, these keys are hardcoded.
+// For a production environment, it is highly recommended to use
+// environment variables to keep these keys secure.
+const SUPABASE_URL = "https://jyhimsnvexhmmavvlaxv.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5aGltc252ZXhobW1hdnZsYXh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1NzIxODEsImV4cCI6MjA3MDE0ODE4MX0.jq1CcPZONgamam6i-k6KOBHvv-Xdl7op0junEkCGrfk";
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
-export { supabase };
+export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+  auth: {
+    storage: localStorage,
+    persistSession: true,
+    autoRefreshToken: true,
+  }
+});

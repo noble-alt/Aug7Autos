@@ -2,51 +2,34 @@
 
 This guide provides instructions for deploying the frontend application to Vercel and explains the project structure.
 
-## Project Structure
+## Deploying to Vercel (Simplified)
 
-This project is now organized into two main folders:
-
--   `/frontend`: Contains the complete Vite + React frontend application. This is the part you will deploy.
--   `/backend`: Contains the configuration and database migrations for your Supabase project. This folder is for managing your database schema and is not deployed to a traditional hosting service like Railway. Your actual backend and database are hosted by Supabase.
-
-## Deploying the Frontend to Vercel
-
-Follow these steps to deploy your application.
+This guide provides simplified instructions for deploying the application to Vercel.
 
 ### Step 1: Connect to Vercel
 
 1.  Go to your [Vercel Dashboard](https://vercel.com/dashboard).
 2.  Click the "**Add New...**" button and select "**Project**".
 3.  **Import your Git Repository**: Find the GitHub repository for this project (`Aug7Autos`) and click "**Import**".
+4.  When asked which branch to deploy, select `feat/simple-deployment`.
 
-### Step 2: Configure the Project
+### Step 2: Configure and Deploy
 
-Vercel is very smart and will likely detect that this is a Vite project automatically. However, here are the settings to confirm:
+Vercel is very smart and will detect that this is a Vite project. You should not need to change any settings.
 
--   **Framework Preset**: Should be automatically set to `Vite`.
--   **Root Directory**: Since all your frontend code is now in the `/frontend` folder, you must set the Root Directory.
-    -   Click the "**Edit**" button next to "Root Directory".
-    -   Select `frontend` from the dropdown list.
--   **Build and Output Settings**: These should be configured automatically by the `Vite` preset.
-    -   **Build Command**: `vite build`
-    -   **Output Directory**: `dist`
-    -   **Install Command**: `npm install`
+-   **Framework Preset**: `Vite` (auto-detected)
+-   **Root Directory**: Should be the default (root).
+-   **Build and Output Settings**: Should be set automatically.
 
-### Step 3: Add Environment Variables
+There is no need to configure Environment Variables for this simplified deployment.
 
-This is the most important step to connect your frontend to your Supabase backend.
+### Step 3: A Note on Security
 
-1.  In the project configuration screen, expand the "**Environment Variables**" section.
-2.  You need to add two variables. You can find the required values in your Supabase project dashboard.
-    -   Go to your Supabase Project -> Settings -> API.
+For this simplified deployment, the Supabase URL and public key have been placed directly into the code.
 
-3.  **Add the first variable:**
-    -   **Name**: `VITE_SUPABASE_URL`
-    -   **Value**: Copy the **Project URL** from your Supabase API settings and paste it here.
+**This is not a secure practice for a final production application.**
 
-4.  **Add the second variable:**
-    -   **Name**: `VITE_SUPABASE_ANON_KEY`
-    -   **Value**: Copy the **`anon` `public` key** from your Supabase API settings and paste it here.
+For a real production launch, you should use Vercel's Environment Variables feature to keep your keys safe. This guide was simplified to get a working preview online quickly.
 
 ### Step 4: Deploy
 
