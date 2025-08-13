@@ -1,5 +1,5 @@
 -- Create admin users table
-CREATE TABLE public.admin_users (
+CREATE TABLE IF NOT EXISTS public.admin_users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   email TEXT UNIQUE NOT NULL,
   password_hash TEXT NOT NULL,
@@ -9,7 +9,7 @@ CREATE TABLE public.admin_users (
 );
 
 -- Create cars table
-CREATE TABLE public.cars (
+CREATE TABLE IF NOT EXISTS public.cars (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   brand TEXT NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE public.cars (
 );
 
 -- Create mobil oils table
-CREATE TABLE public.mobil_oils (
+CREATE TABLE IF NOT EXISTS public.mobil_oils (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   type TEXT NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE public.mobil_oils (
 );
 
 -- Create blogs table
-CREATE TABLE public.blogs (
+CREATE TABLE IF NOT EXISTS public.blogs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title TEXT NOT NULL,
   slug TEXT UNIQUE NOT NULL,

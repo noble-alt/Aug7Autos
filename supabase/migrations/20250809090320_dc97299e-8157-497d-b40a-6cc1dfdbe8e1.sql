@@ -5,4 +5,5 @@ VALUES (
   'Aug7-autos@gmail.com',
   crypt('Aug7autos', gen_salt('bf')),
   'Aug7Autos Admin'
-);
+)
+ON CONFLICT (email) DO NOTHING;

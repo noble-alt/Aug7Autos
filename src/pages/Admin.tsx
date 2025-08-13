@@ -489,7 +489,7 @@ const CarDialog = ({ car, onClose }: { car?: Car; onClose: () => void }) => {
     model: car?.model || 'Camry', // Default model  
     year: car?.year || new Date().getFullYear(), // Default year
     description: car?.description || '', // Remove description field
-    status: car?.status || 'brand-new',
+    status: car?.status || 'new',
     image_url: car?.image_url || '',
     price: car?.price || 0 // Default price since it's required but not shown
   });
@@ -546,9 +546,9 @@ const CarDialog = ({ car, onClose }: { car?: Car; onClose: () => void }) => {
               <SelectValue placeholder="Select condition" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="brand-new">Brand New</SelectItem>
-              <SelectItem value="fairly-used">Fairly Used</SelectItem>
-              <SelectItem value="for-hire">For Hire</SelectItem>
+              <SelectItem value="new">Brand New</SelectItem>
+              <SelectItem value="fairly used">Fairly Used</SelectItem>
+              <SelectItem value="for hire">For Hire</SelectItem>
             </SelectContent>
           </Select>
         </div>
