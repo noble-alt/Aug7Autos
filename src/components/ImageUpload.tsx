@@ -121,6 +121,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       />
       
       <Button
+        type="button"
         variant="outline"
         onClick={() => document.getElementById(`image-upload-${bucket}`)?.click()}
         disabled={uploading}
