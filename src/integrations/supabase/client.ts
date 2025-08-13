@@ -5,17 +5,33 @@ import type { Database } from './types';
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
-  throw new Error("Missing Supabase URL or anon key.");
+// Enhanced debugging
+console.log("Attempting to connect to Supabase with URL:", SUPABASE_URL);
+if (!SUPABASE_PUBLISHABLE_KEY) {
+  console.log("Supabase Anon Key is MISSING.");
 }
+
+if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
+  throw new Error("Missing Supabase URL or anon key. Please check Vercel environment variables.");
+}
+
+let supabase;
+
+try {
+  supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+    auth: {
+      storage: localStorage,
+      persistSession: true,
+      autoRefreshToken: true,
+    }
+  });
+} catch (error) {
+  console.error("Error creating Supabase client:", error);
+  throw new Error(`Failed to create Supabase client. Please ensure the VITE_SUPABASE_URL is a valid and complete URL (e.g., starts with https://). The provided URL was: "${SUPABASE_URL}"`);
+}
+
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-  auth: {
-    storage: localStorage,
-    persistSession: true,
-    autoRefreshToken: true,
-  }
-});
+export { supabase };
