@@ -494,6 +494,32 @@ const CarDialog = ({ car, onClose }: { car?: Car; onClose: () => void }) => {
     price: car?.price || 0 // Default price since it's required but not shown
   });
 
+  useEffect(() => {
+    if (car) {
+      setFormData({
+        name: car.name || '',
+        brand: car.brand || 'Toyota',
+        model: car.model || 'Camry',
+        year: car.year || new Date().getFullYear(),
+        description: car.description || '',
+        status: car.status || 'Brand new cars',
+        image_url: car.image_url || '',
+        price: car.price || 0
+      });
+    } else {
+      setFormData({
+        name: '',
+        brand: 'Toyota',
+        model: 'Camry',
+        year: new Date().getFullYear(),
+        description: '',
+        status: 'Brand new cars',
+        image_url: '',
+        price: 0
+      });
+    }
+  }, [car]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
