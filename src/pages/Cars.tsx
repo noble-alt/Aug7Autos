@@ -40,6 +40,14 @@ const Cars = () => {
   }, []);
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const filterFromUrl = params.get('filter');
+    if (filterFromUrl) {
+      setStatusFilter(filterFromUrl);
+    }
+  }, []);
+
+  useEffect(() => {
     filterCars();
   }, [cars, statusFilter, searchQuery]);
 
@@ -102,25 +110,25 @@ const Cars = () => {
             All Cars
           </Button>
           <Button
-            variant={statusFilter === 'for-hire' ? 'default' : 'outline'}
+            variant={statusFilter === 'Rent/Hire a car' ? 'default' : 'outline'}
             className="rounded-full"
-            onClick={() => setStatusFilter('for-hire')}
+            onClick={() => setStatusFilter('Rent/Hire a car')}
           >
-            For Hire
+            Rent/Hire a car
           </Button>
           <Button
-            variant={statusFilter === 'brand-new' ? 'default' : 'outline'}
+            variant={statusFilter === 'Foreign used cars' ? 'default' : 'outline'}
             className="rounded-full"
-            onClick={() => setStatusFilter('brand-new')}
+            onClick={() => setStatusFilter('Foreign used cars')}
           >
-            New
+            Foreign used cars
           </Button>
           <Button
-            variant={statusFilter === 'fairly-used' ? 'default' : 'outline'}
+            variant={statusFilter === 'Brand new cars' ? 'default' : 'outline'}
             className="rounded-full"
-            onClick={() => setStatusFilter('fairly-used')}
+            onClick={() => setStatusFilter('Brand new cars')}
           >
-            Fairly Used
+            Brand new cars
           </Button>
         </div>
 
