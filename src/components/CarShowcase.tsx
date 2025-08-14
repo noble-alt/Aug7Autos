@@ -95,10 +95,9 @@ const CarShowcase = () => {
               <CardContent className="p-6">
                 <div className="mb-4">
                   <h3 className="text-2xl font-bold text-primary mb-2">{car.name}</h3>
-                  <p className="text-lg font-semibold text-electric-red capitalize">{car.status?.replace('-', ' ')}</p>
                 </div>
 
-                {/* No action buttons for featured cars on homepage */}
+                {/* No action buttons or status for featured cars on homepage */}
               </CardContent>
             </Card>
             ))
