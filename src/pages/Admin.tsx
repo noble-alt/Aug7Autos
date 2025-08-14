@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Car, Wrench, FileText, Users, LogOut, Plus, Edit, Trash2 } from 'lucide-react';
+import { Car, Wrench, FileText, Users, LogOut, Plus, Edit, Trash2, Star } from 'lucide-react';
 import { ImageUpload } from '@/components/ImageUpload';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,6 +24,7 @@ interface Car {
   image_url?: string;
   specifications?: any;
   price?: number;
+  is_featured?: boolean;
 }
 
 interface MobilOil {
@@ -178,6 +179,42 @@ const Admin = () => {
     navigate('/');
   };
 
+  const handleToggleFeatured = async (car: Car) => {
+    const featuredCars = cars.filter(c => c.is_featured);
+
+    // Prevent featuring more than 2 cars
+    if (!car.is_featured && featuredCars.length >= 2) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "You can only feature a maximum of 2 cars."
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('cars')
+        .update({ is_featured: !car.is_featured })
+        .eq('id', car.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: `Car ${!car.is_featured ? 'featured' : 'unfeatured'} successfully.`
+      });
+
+      fetchData();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update featured status."
+      });
+    }
+  };
+
   const handleDelete = async (table: 'cars' | 'mobil_oils' | 'blogs', id: string) => {
     try {
       const { error } = await supabase.from(table).delete().eq('id', id);
@@ -313,11 +350,22 @@ const Admin = () => {
               
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {cars.map((car) => (
-                  <Card key={car.id}>
+                  <Card key={car.id} className={car.is_featured ? 'border-yellow-400 border-2' : ''}>
                     <CardHeader>
                       <CardTitle className="flex justify-between items-start">
-                        <span>{car.name}</span>
+                        <div className="flex items-center gap-2">
+                          {car.is_featured && <Star className="h-5 w-5 text-yellow-400 fill-current" />}
+                          <span>{car.name}</span>
+                        </div>
                         <div className="flex gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleToggleFeatured(car)}
+                            title={car.is_featured ? 'Unfeature this car' : 'Feature this car'}
+                          >
+                            <Star className={`h-4 w-4 ${car.is_featured ? 'text-yellow-400 fill-current' : 'text-gray-400'}`} />
+                          </Button>
                           <Button
                             variant="ghost"
                             size="sm"
@@ -328,13 +376,15 @@ const Admin = () => {
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDelete('cars', car.id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+                          {!car.is_featured && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDelete('cars', car.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          )}
                         </div>
                       </CardTitle>
                       <CardDescription className="capitalize">{car.status?.replace('-', ' ')}</CardDescription>
