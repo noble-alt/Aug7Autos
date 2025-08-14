@@ -621,19 +621,25 @@ const CarDialog = ({ car, onClose }: { car?: Car; onClose: () => void }) => {
           />
         </div>
         
-        <div className="space-y-2">
-          <Label htmlFor="status">Condition</Label>
-          <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select condition" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Rent/Hire a car">Rent/Hire a car</SelectItem>
-              <SelectItem value="Foreign used cars">Foreign used cars</SelectItem>
-              <SelectItem value="Brand new cars">Brand new cars</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        {/* Fields for non-featured cars */}
+        {(!car || !car.is_featured) && (
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="status">Condition</Label>
+              <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select condition" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Rent/Hire a car">Rent/Hire a car</SelectItem>
+                  <SelectItem value="Foreign used cars">Foreign used cars</SelectItem>
+                  <SelectItem value="Brand new cars">Brand new cars</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            {/* Add other fields for non-featured cars here if they existed */}
+          </>
+        )}
         
         <div className="space-y-2">
           <Label>Car Image</Label>
