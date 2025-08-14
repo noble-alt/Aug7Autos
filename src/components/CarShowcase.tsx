@@ -126,23 +126,23 @@ const CarShowcase = () => {
           <Button
             variant="outline"
             className="rounded-full"
-            onClick={() => window.location.href = '/cars?filter=for-hire'}
+            onClick={() => window.location.href = '/cars?filter=Rent/Hire a car'}
           >
-            For Hire
+            Rent/Hire a car
           </Button>
           <Button
             variant="outline"
             className="rounded-full"
-            onClick={() => window.location.href = '/cars?filter=new'}
+            onClick={() => window.location.href = '/cars?filter=Foreign used cars'}
           >
-            New
+            Foreign used cars
           </Button>
           <Button
             variant="outline"
             className="rounded-full"
-            onClick={() => window.location.href = '/cars?filter=fairly-used'}
+            onClick={() => window.location.href = '/cars?filter=Brand new cars'}
           >
-            Fairly Used
+            Brand new cars
           </Button>
         </div>
 
