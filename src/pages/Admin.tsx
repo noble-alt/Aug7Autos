@@ -300,10 +300,12 @@ const Admin = () => {
                   </DialogTrigger>
                   <CarDialog 
                     car={editingItem} 
-                    onClose={() => {
+                    onClose={async () => {
+                      const scrollY = window.scrollY;
                       setIsCarDialogOpen(false);
                       setEditingItem(null);
-                      fetchData();
+                      await fetchData();
+                      setTimeout(() => window.scrollTo(0, scrollY), 0);
                     }} 
                   />
                 </Dialog>
@@ -363,10 +365,12 @@ const Admin = () => {
                   </DialogTrigger>
                   <OilDialog 
                     oil={editingItem} 
-                    onClose={() => {
+                    onClose={async () => {
+                      const scrollY = window.scrollY;
                       setIsOilDialogOpen(false);
                       setEditingItem(null);
-                      fetchData();
+                      await fetchData();
+                      setTimeout(() => window.scrollTo(0, scrollY), 0);
                     }} 
                   />
                 </Dialog>
@@ -425,10 +429,12 @@ const Admin = () => {
                   </DialogTrigger>
                   <BlogDialog 
                     blog={editingItem} 
-                    onClose={() => {
+                    onClose={async () => {
+                      const scrollY = window.scrollY;
                       setIsBlogDialogOpen(false);
                       setEditingItem(null);
-                      fetchData();
+                      await fetchData();
+                      setTimeout(() => window.scrollTo(0, scrollY), 0);
                     }} 
                   />
                 </Dialog>
@@ -602,16 +608,47 @@ const OilDialog = ({ oil, onClose }: { oil?: MobilOil; onClose: () => void }) =>
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: oil?.name || '',
-    type: oil?.type || 'Full Synthetic', // Default type
-    viscosity: oil?.viscosity || '5W-30', // Default viscosity
-    volume: oil?.volume || '1L', // Default volume
-    description: oil?.description || '', // Remove description field
-    image_url: oil?.image_url || '',
-    benefits: oil?.benefits || [], // Remove benefits field
-    in_stock: oil?.in_stock !== undefined ? oil.in_stock : true, // Remove in_stock field
     category: oil?.category || 'engine oil',
-    price: oil?.price || 0 // Default price since it's required but not shown
+    viscosity: oil?.viscosity || '5W-30',
+    volume: oil?.volume || '1 Liter',
+    image_url: oil?.image_url || '',
+    // Default values for fields not in the form
+    type: oil?.type || 'Full Synthetic',
+    description: oil?.description || '',
+    benefits: oil?.benefits || [],
+    in_stock: oil?.in_stock !== undefined ? oil.in_stock : true,
+    price: oil?.price || 0,
   });
+
+  useEffect(() => {
+    if (oil) {
+      setFormData({
+        name: oil.name || '',
+        category: oil.category || 'engine oil',
+        viscosity: oil.viscosity || '5W-30',
+        volume: oil.volume || '1 Liter',
+        image_url: oil.image_url || '',
+        type: oil.type || 'Full Synthetic',
+        description: oil.description || '',
+        benefits: oil.benefits || [],
+        in_stock: oil.in_stock !== undefined ? oil.in_stock : true,
+        price: oil.price || 0,
+      });
+    } else {
+      setFormData({
+        name: '',
+        category: 'engine oil',
+        viscosity: '5W-30',
+        volume: '1 Liter',
+        image_url: '',
+        type: 'Full Synthetic',
+        description: '',
+        benefits: [],
+        in_stock: true,
+        price: 0,
+      });
+    }
+  }, [oil]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -656,6 +693,35 @@ const OilDialog = ({ oil, onClose }: { oil?: MobilOil; onClose: () => void }) =>
             required
             placeholder="e.g., Mobil 1 Full Synthetic"
           />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="viscosity">Viscosity</Label>
+            <Select value={formData.viscosity} onValueChange={(value) => setFormData({ ...formData, viscosity: value })}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select viscosity" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="5W-30">5W-30</SelectItem>
+                <SelectItem value="5W-20">5W-20</SelectItem>
+                <SelectItem value="0W-20">0W-20</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="volume">Volume</Label>
+            <Select value={formData.volume} onValueChange={(value) => setFormData({ ...formData, volume: value })}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select volume" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1 Liter">1 Liter</SelectItem>
+                <SelectItem value="4 Liters">4 Liters</SelectItem>
+                <SelectItem value="5 Liters">5 Liters</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         
         <div className="space-y-2">
