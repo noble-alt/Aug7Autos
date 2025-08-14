@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Car, Wrench, FileText, Users, LogOut, Plus, Edit, Trash2 } from 'lucide-react';
+import { Car, Wrench, FileText, Users, LogOut, Plus, Edit, Trash2, Star } from 'lucide-react';
 import { ImageUpload } from '@/components/ImageUpload';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,6 +24,7 @@ interface Car {
   image_url?: string;
   specifications?: any;
   price?: number;
+  is_featured?: boolean;
 }
 
 interface MobilOil {
@@ -178,6 +179,42 @@ const Admin = () => {
     navigate('/');
   };
 
+  const handleToggleFeatured = async (car: Car) => {
+    const featuredCars = cars.filter(c => c.is_featured);
+
+    // Prevent featuring more than 2 cars
+    if (!car.is_featured && featuredCars.length >= 2) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "You can only feature a maximum of 2 cars."
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('cars')
+        .update({ is_featured: !car.is_featured })
+        .eq('id', car.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: `Car ${!car.is_featured ? 'featured' : 'unfeatured'} successfully.`
+      });
+
+      fetchData();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update featured status."
+      });
+    }
+  };
+
   const handleDelete = async (table: 'cars' | 'mobil_oils' | 'blogs', id: string) => {
     try {
       const { error } = await supabase.from(table).delete().eq('id', id);
@@ -300,10 +337,12 @@ const Admin = () => {
                   </DialogTrigger>
                   <CarDialog 
                     car={editingItem} 
-                    onClose={() => {
+                    onClose={async () => {
+                      const scrollY = window.scrollY;
                       setIsCarDialogOpen(false);
                       setEditingItem(null);
-                      fetchData();
+                      await fetchData();
+                      setTimeout(() => window.scrollTo(0, scrollY), 0);
                     }} 
                   />
                 </Dialog>
@@ -311,11 +350,22 @@ const Admin = () => {
               
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {cars.map((car) => (
-                  <Card key={car.id}>
+                  <Card key={car.id} className={car.is_featured ? 'border-yellow-400 border-2' : ''}>
                     <CardHeader>
                       <CardTitle className="flex justify-between items-start">
-                        <span>{car.name}</span>
+                        <div className="flex items-center gap-2">
+                          {car.is_featured && <Star className="h-5 w-5 text-yellow-400 fill-current" />}
+                          <span>{car.name}</span>
+                        </div>
                         <div className="flex gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleToggleFeatured(car)}
+                            title={car.is_featured ? 'Unfeature this car' : 'Feature this car'}
+                          >
+                            <Star className={`h-4 w-4 ${car.is_featured ? 'text-yellow-400 fill-current' : 'text-gray-400'}`} />
+                          </Button>
                           <Button
                             variant="ghost"
                             size="sm"
@@ -326,13 +376,15 @@ const Admin = () => {
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDelete('cars', car.id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+                          {!car.is_featured && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDelete('cars', car.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          )}
                         </div>
                       </CardTitle>
                       <CardDescription className="capitalize">{car.status?.replace('-', ' ')}</CardDescription>
@@ -363,10 +415,12 @@ const Admin = () => {
                   </DialogTrigger>
                   <OilDialog 
                     oil={editingItem} 
-                    onClose={() => {
+                    onClose={async () => {
+                      const scrollY = window.scrollY;
                       setIsOilDialogOpen(false);
                       setEditingItem(null);
-                      fetchData();
+                      await fetchData();
+                      setTimeout(() => window.scrollTo(0, scrollY), 0);
                     }} 
                   />
                 </Dialog>
@@ -425,10 +479,12 @@ const Admin = () => {
                   </DialogTrigger>
                   <BlogDialog 
                     blog={editingItem} 
-                    onClose={() => {
+                    onClose={async () => {
+                      const scrollY = window.scrollY;
                       setIsBlogDialogOpen(false);
                       setEditingItem(null);
-                      fetchData();
+                      await fetchData();
+                      setTimeout(() => window.scrollTo(0, scrollY), 0);
                     }} 
                   />
                 </Dialog>
@@ -494,6 +550,32 @@ const CarDialog = ({ car, onClose }: { car?: Car; onClose: () => void }) => {
     price: car?.price || 0 // Default price since it's required but not shown
   });
 
+  useEffect(() => {
+    if (car) {
+      setFormData({
+        name: car.name || '',
+        brand: car.brand || 'Toyota',
+        model: car.model || 'Camry',
+        year: car.year || new Date().getFullYear(),
+        description: car.description || '',
+        status: car.status || 'Brand new cars',
+        image_url: car.image_url || '',
+        price: car.price || 0
+      });
+    } else {
+      setFormData({
+        name: '',
+        brand: 'Toyota',
+        model: 'Camry',
+        year: new Date().getFullYear(),
+        description: '',
+        status: 'Brand new cars',
+        image_url: '',
+        price: 0
+      });
+    }
+  }, [car]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -539,19 +621,25 @@ const CarDialog = ({ car, onClose }: { car?: Car; onClose: () => void }) => {
           />
         </div>
         
-        <div className="space-y-2">
-          <Label htmlFor="status">Condition</Label>
-          <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select condition" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Rent/Hire a car">Rent/Hire a car</SelectItem>
-              <SelectItem value="Foreign used cars">Foreign used cars</SelectItem>
-              <SelectItem value="Brand new cars">Brand new cars</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        {/* Fields for non-featured cars */}
+        {(!car || !car.is_featured) && (
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="status">Condition</Label>
+              <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select condition" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Rent/Hire a car">Rent/Hire a car</SelectItem>
+                  <SelectItem value="Foreign used cars">Foreign used cars</SelectItem>
+                  <SelectItem value="Brand new cars">Brand new cars</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            {/* Add other fields for non-featured cars here if they existed */}
+          </>
+        )}
         
         <div className="space-y-2">
           <Label>Car Image</Label>
@@ -576,16 +664,47 @@ const OilDialog = ({ oil, onClose }: { oil?: MobilOil; onClose: () => void }) =>
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: oil?.name || '',
-    type: oil?.type || 'Full Synthetic', // Default type
-    viscosity: oil?.viscosity || '5W-30', // Default viscosity
-    volume: oil?.volume || '1L', // Default volume
-    description: oil?.description || '', // Remove description field
-    image_url: oil?.image_url || '',
-    benefits: oil?.benefits || [], // Remove benefits field
-    in_stock: oil?.in_stock !== undefined ? oil.in_stock : true, // Remove in_stock field
     category: oil?.category || 'engine oil',
-    price: oil?.price || 0 // Default price since it's required but not shown
+    viscosity: oil?.viscosity || '5W-30',
+    volume: oil?.volume || '1 Liter',
+    image_url: oil?.image_url || '',
+    // Default values for fields not in the form
+    type: oil?.type || 'Full Synthetic',
+    description: oil?.description || '',
+    benefits: oil?.benefits || [],
+    in_stock: oil?.in_stock !== undefined ? oil.in_stock : true,
+    price: oil?.price || 0,
   });
+
+  useEffect(() => {
+    if (oil) {
+      setFormData({
+        name: oil.name || '',
+        category: oil.category || 'engine oil',
+        viscosity: oil.viscosity || '5W-30',
+        volume: oil.volume || '1 Liter',
+        image_url: oil.image_url || '',
+        type: oil.type || 'Full Synthetic',
+        description: oil.description || '',
+        benefits: oil.benefits || [],
+        in_stock: oil.in_stock !== undefined ? oil.in_stock : true,
+        price: oil.price || 0,
+      });
+    } else {
+      setFormData({
+        name: '',
+        category: 'engine oil',
+        viscosity: '5W-30',
+        volume: '1 Liter',
+        image_url: '',
+        type: 'Full Synthetic',
+        description: '',
+        benefits: [],
+        in_stock: true,
+        price: 0,
+      });
+    }
+  }, [oil]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -630,6 +749,35 @@ const OilDialog = ({ oil, onClose }: { oil?: MobilOil; onClose: () => void }) =>
             required
             placeholder="e.g., Mobil 1 Full Synthetic"
           />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="viscosity">Viscosity</Label>
+            <Select value={formData.viscosity} onValueChange={(value) => setFormData({ ...formData, viscosity: value })}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select viscosity" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="5W-30">5W-30</SelectItem>
+                <SelectItem value="5W-20">5W-20</SelectItem>
+                <SelectItem value="0W-20">0W-20</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="volume">Volume</Label>
+            <Select value={formData.volume} onValueChange={(value) => setFormData({ ...formData, volume: value })}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select volume" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1 Liter">1 Liter</SelectItem>
+                <SelectItem value="4 Liters">4 Liters</SelectItem>
+                <SelectItem value="5 Liters">5 Liters</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         
         <div className="space-y-2">
