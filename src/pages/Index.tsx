@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import CarShowcase from '@/components/CarShowcase';
-import MobilOilSection from '@/components/MobilOilSection';
+// import MobilOilSection from '@/components/MobilOilSection';
 import WhyChooseUs from '@/components/WhyChooseUs';
+import Testimonials from '@/components/Testimonials';
 import ContactInfo from '@/components/ContactInfo';
 import Contact from '@/components/Contact';
 import WhatsAppFloat from '@/components/WhatsAppFloat';
@@ -59,12 +60,16 @@ const Index = () => {
           <CarShowcase />
         </div>
         
-        <div className="animate-on-scroll">
+        {/* <div className="animate-on-scroll">
           <MobilOilSection />
-        </div>
+        </div> */}
         
         <div className="animate-on-scroll">
           <WhyChooseUs />
+        </div>
+
+        <div className="animate-on-scroll">
+          <Testimonials />
         </div>
         
         <div className="animate-on-scroll">
