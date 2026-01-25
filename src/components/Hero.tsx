@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowRight, Star, Shield, Award } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import heroBackground from '@/assets/hero-background.jpg';
+import heroBackground from '../assets/hero-background.jpg';
 
 const Hero = () => {
   return (
