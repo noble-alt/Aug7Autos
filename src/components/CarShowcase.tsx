@@ -21,8 +21,8 @@ const CarShowcase = () => {
         const { data, error } = await supabase
           .from('cars')
           .select('*')
-          .limit(4)
-          .order('created_at', { ascending: false });
+          .eq('is_featured', true)
+          .limit(2);
         
         if (error) throw error;
         setCars(data || []);
@@ -84,7 +84,7 @@ const CarShowcase = () => {
                 <img 
                   src={car.image_url || '/placeholder.svg'} 
                   alt={car.name}
-                  className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
+                  className="w-full h-64 object-contain group-hover:scale-110 transition-transform duration-700"
                 />
                 <div className="absolute top-4 right-4 flex items-center bg-black/50 backdrop-blur-sm rounded-full px-2 py-1">
                   <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
@@ -95,19 +95,9 @@ const CarShowcase = () => {
               <CardContent className="p-6">
                 <div className="mb-4">
                   <h3 className="text-2xl font-bold text-primary mb-2">{car.name}</h3>
-                  <p className="text-lg font-semibold text-electric-red capitalize">{car.status?.replace('-', ' ')}</p>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex gap-2">
-                  <Button 
-                    className="flex-1 btn-premium text-white rounded-full"
-                    size="sm"
-                    onClick={() => handleContactWhatsApp(car.name, "View Details")}
-                  >
-                    View Details
-                  </Button>
-                </div>
+                {/* No action buttons or status for featured cars on homepage */}
               </CardContent>
             </Card>
             ))

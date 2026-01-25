@@ -48,7 +48,7 @@ const WhyChooseUs = () => {
         {/* Section Header */}
         <div className="text-center mb-16 animate-slide-up">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Why Choose <span className="text-electric-red">Abuja Best Cars?</span>
+            Why Choose <span className="text-electric-red">Aug7Autos?</span>
           </h2>
           <p className="text-xl text-white/90 max-w-3xl mx-auto">
             We're not just a car dealership - we're your partner in finding the perfect vehicle 

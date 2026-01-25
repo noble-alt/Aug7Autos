@@ -10,9 +10,9 @@ const Testimonials = () => {
     {
       id: 1,
       name: "Ahmed Musa",
-      location: "Abuja",
+      location: "Ibadan",
       rating: 5,
-      text: "Exceptional service! The team at Abuja Best Cars helped me find the perfect SUV for my family. The financing process was smooth and transparent.",
+      text: "Exceptional service! The team at Aug7Autos helped me find the perfect SUV for my family. The financing process was smooth and transparent.",
       car: "Premium SUV"
     },
     {
